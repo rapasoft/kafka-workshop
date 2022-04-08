@@ -1,0 +1,158 @@
+{
+  "variableTypes": [
+    {
+      "variableTypeId": 1,
+      "name": "analogValue"
+    },
+    {
+      "variableTypeId": 2,
+      "name": "status"
+    }
+  ],
+  "variables": [
+    {
+      "variableId": 1,
+      "name": "EMERGENCY_BOOTH_DOOR_STATUS",
+      "type": 2,
+      "supportedStates": [
+        {
+          "name": "CLOSED",
+          "alarmLevel": 0
+        },
+        {
+          "name": "BLOCKED",
+          "alarmLevel": 1
+        },
+        {
+          "name": "OPEN",
+          "alarmLevel": 2
+        }
+      ]
+    },
+    {
+      "variableId": 2,
+      "name": "EMERGENCY_BOOTH_PHONE_STATUS",
+      "type": 2,
+      "supportedStates": [
+        {
+          "name": "PUT_DOWN",
+          "alarmLevel": 0
+        },
+        {
+          "name": "BLOCKED",
+          "alarmLevel": 1
+        },
+        {
+          "name": "PICKED_UP",
+          "alarmLevel": 1
+        },
+        {
+          "name": "ON_CALL",
+          "alarmLevel": 2
+        }
+      ]
+    },
+    {
+      "variableId": 3,
+      "name": "EMERGENCY_BOOTH_FIRE_EXTINGUISHER_STATUS",
+      "type": 2,
+      "supportedStates": [
+        {
+          "name": "PLACED",
+          "alarmLevel": 0
+        },
+        {
+          "name": "BLOCKED",
+          "alarmLevel": 1
+        },
+        {
+          "name": "TAKEN",
+          "alarmLevel": 2
+        }
+      ]
+    },
+    {
+      "variableId": 4,
+      "name": "CO_SENSOR_STATUS",
+      "type": 2,
+      "supportedStates": [
+        {
+          "name": "OK",
+          "alarmLevel": 0
+        },
+        {
+          "name": "BLOCKED",
+          "alarmLevel": 1
+        },
+        {
+          "name": "BROKEN",
+          "alarmLevel": 2
+        },
+        {
+          "name": "LEVELS_CRITICALLY_HIGH",
+          "alarmLevel": 2
+        }
+      ]
+    },
+    {
+      "variableId": 5,
+      "name": "CO_SENSOR_VALUE",
+      "type": 1
+    },
+    {
+      "variableId": 6,
+      "name": "NO_SENSOR_STATUS",
+      "type": 2,
+      "supportedStates": [
+        {
+          "name": "OK",
+          "alarmLevel": 0
+        },
+        {
+          "name": "BLOCKED",
+          "alarmLevel": 1
+        },
+        {
+          "name": "BROKEN",
+          "alarmLevel": 2
+        },
+        {
+          "name": "LEVELS_CRITICALLY_HIGH",
+          "alarmLevel": 2
+        }
+      ]
+    },
+    {
+      "variableId": 7,
+      "name": "NO_SENSOR_VALUE",
+      "type": 1
+    }
+  ],
+  "deviceTypes": [
+    {
+      "deviceTypeId": 1,
+      "description": "Emergency booth",
+      "supportedVariables": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "deviceTypeId": 2,
+      "description": "CO Sensor",
+      "supportedVariables": [
+        4,
+        5
+      ]
+    },
+    {
+      "deviceTypeId": 3,
+      "description": "NO Sensor",
+      "supportedVariables": [
+        6,
+        7
+      ]
+    }
+  ]
+}

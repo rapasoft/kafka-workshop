@@ -1,0 +1,52 @@
+version: '2'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    network_mode: host
+  kafka:
+    image: wurstmeister/kafka
+    restart: on-failure
+    network_mode: host
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: localhost:2181
+      KAFKA_MESSAGE_MAX_BYTES: 1500000
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 5000
+      KAFKA_LOG_ROLL_MS: 360000
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 360000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  schemaregistry:
+    image: confluentinc/cp-schema-registry
+    network_mode: host
+    restart: on-failure
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: localhost:9092
+      SCHEMA_REGISTRY_HOST_NAME: schemaregistry
+  akhq:
+    image: tchiotludo/akhq
+    network_mode: host
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            docker-kafka-server:
+              properties:
+                bootstrap.servers: "localhost:9092"
+              schema-registry:
+                url: "http://localhost:8081"
+    depends_on:
+      - kafka
+      - schemaregistry
+  dummytunnel:
+    build: .
+    network_mode: host
+    depends_on:
+      - kafka
+    restart: on-failure
+    volumes:
+      - ./src/main/resources/application.properties:/application.properties
