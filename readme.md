@@ -10,9 +10,11 @@
 
 1. Clone the repo
 2. To run the `dummy-tunnel` project with Kafka and other dependencies:
-   1. Build it via `mvn clean package`
+   1. Build it via `mvn clean package` 
    2. Run it via `docker-compose up` (or with `-d` to run it in background)
-3. Open `project` project :)
+   3. To rebuild dummytunnelen on changes run `docker-compose --build dummytunnel`
+3. Open `project` project
+    1. Work :)
 
 ## Workshop agenda
 

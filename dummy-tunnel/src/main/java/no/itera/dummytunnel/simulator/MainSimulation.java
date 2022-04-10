@@ -7,9 +7,7 @@ import no.itera.dummytunnel.model.Variable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -22,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@DependsOn("valueUpdateKafkaTemplate")
 public class MainSimulation {
 
     private static final Logger logger = LoggerFactory.getLogger(MainSimulation.class);
@@ -39,8 +36,9 @@ public class MainSimulation {
     public MainSimulation(
             PlantsHolder plantsHolder,
             CommonVariables commonVariables,
-            @Qualifier("valueUpdateKafkaTemplate") KafkaTemplate<Long, ValueUpdate> valueUpdateKafkaTemplate,
-            @Qualifier("stateUpdateKafkaTemplate") KafkaTemplate<Long, StateUpdate> stateUpdateKafkaTemplate) {
+            KafkaTemplate<Long, ValueUpdate> valueUpdateKafkaTemplate,
+            KafkaTemplate<Long, StateUpdate> stateUpdateKafkaTemplate
+    ) {
         this.plantsHolder = plantsHolder;
         this.commonVariables = commonVariables;
         this.valueUpdateKafkaTemplate = valueUpdateKafkaTemplate;
@@ -97,20 +95,21 @@ public class MainSimulation {
                                 variableStates.put(variableId, newRandomState.name());
 
                                 plant.deviceVariableStates().put(deviceId, variableStates);
-
+                                var stateUpdate = new StateUpdate(
+                                        deviceId,
+                                        device.name(),
+                                        plant.plantId(),
+                                        plant.name(),
+                                        variableName,
+                                        newRandomState.name(),
+                                        newRandomState.alarmLevel(),
+                                        Instant.now().toEpochMilli()
+                                );
+                                logger.debug("Sending state update {} for device id: {}", stateUpdate, deviceId);
                                 stateUpdateKafkaTemplate.send(
                                         stateUpdateTopic,
                                         plant.plantId(),
-                                        new StateUpdate(
-                                                deviceId,
-                                                device.name(),
-                                                plant.plantId(),
-                                                plant.name(),
-                                                variableName,
-                                                newRandomState.name(),
-                                                newRandomState.alarmLevel(),
-                                                Instant.now().toEpochMilli()
-                                        )
+                                        stateUpdate
                                 );
                             }
                         }
